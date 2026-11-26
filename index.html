@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>まなびの森 ｜ 小中学生のための遊んでわかる教材</title>
+<meta name="description" content="さわって、うごかして、わかる。小学生・中学生のための無料の学習教材。">
+<meta property="og:title" content="まなびの森">
+<meta property="og:description" content="さわって、うごかして、わかる。小中学生のための無料の学習教材。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { --bg:#fdf8ee; --ink:#2f3a2f; --leaf:#4f9a5a; --card:#fff; --sub:#7a8577; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Hiragino Maru Gothic ProN","M PLUS Rounded 1c","Noto Sans JP",sans-serif; background:var(--bg); color:var(--ink); }
+  header { text-align:center; padding:40px 16px 24px; }
+  h1 { margin:0; font-size:2rem; color:var(--leaf); letter-spacing:.05em; }
+  header p { margin:8px 0 0; color:var(--sub); }
+  .filters { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; padding:0 16px 16px; }
+  .filters button { border:2px solid var(--leaf); background:#fff; color:var(--leaf); border-radius:999px; padding:6px 14px; font:inherit; font-weight:bold; cursor:pointer; }
+  .filters button.on { background:var(--leaf); color:#fff; }
+  main { max-width:960px; margin:0 auto; padding:0 16px 48px; display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+  a.card { display:block; background:var(--card); border-radius:16px; padding:20px; text-decoration:none; color:inherit; box-shadow:0 3px 0 #e6dcc6; transition:transform .15s; }
+  a.card:hover { transform:translateY(-3px); }
+  .emoji { font-size:2.4rem; }
+  .tags { display:flex; gap:6px; margin:8px 0; }
+  .tag { font-size:.75rem; padding:2px 8px; border-radius:999px; background:#e8f3e9; color:var(--leaf); font-weight:bold; }
+  .tag.subj { background:#fff1d6; color:#b07a12; }
+  .card h2 { margin:4px 0; font-size:1.2rem; }
+  .card p { margin:0; color:var(--sub); font-size:.9rem; line-height:1.6; }
+  footer { text-align:center; color:var(--sub); font-size:.8rem; padding:24px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🌳 まなびの森</h1>
+  <p>さわって、うごかして、わかる。</p>
+</header>
+<div class="filters" id="filters"></div>
+<main id="list"></main>
+<footer>© まなびの森</footer>
+<script>
+// 教材を追加するときは、この配列に1行足すだけ
+const items = [
+  { path:"warizan/", emoji:"🍬", title:"わり算ってなに？", grade:"小3", subject:"算数",
+    desc:"あめをお皿に分けて、わり算のしくみを目で見てたしかめよう。さいごにクイズも！" },
+];
+const subjects = ["すべて", ...new Set(items.map(i => i.subject))];
+let current = "すべて";
+function render() {
+  document.getElementById("filters").innerHTML = subjects.map(s =>
+    `<button class="${s===current?'on':''}" onclick="current='${s}';render()">${s}</button>`).join("");
+  document.getElementById("list").innerHTML = items
+    .filter(i => current==="すべて" || i.subject===current)
+    .map(i => `<a class="card" href="${i.path}">
+      <div class="emoji">${i.emoji}</div>
+      <div class="tags"><span class="tag">${i.grade}</span><span class="tag subj">${i.subject}</span></div>
+      <h2>${i.title}</h2><p>${i.desc}</p></a>`).join("");
+}
+render();
+</script>
+</body>
+</html>
