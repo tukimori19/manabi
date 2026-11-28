@@ -20,7 +20,14 @@
   .filters { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; padding:0 16px 16px; }
   .filters button { border:2px solid var(--leaf); background:#fff; color:var(--leaf); border-radius:999px; padding:6px 14px; font:inherit; font-weight:bold; cursor:pointer; }
   .filters button.on { background:var(--leaf); color:#fff; }
-  main { max-width:960px; margin:0 auto; padding:0 16px 48px; display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+  main { max-width:960px; margin:0 auto; padding:0 16px 48px; }
+  .grade { scroll-margin-top:12px; margin-top:28px; }
+  .grade h2.gh { font-size:1.4rem; margin:0 0 12px; padding-left:12px; border-left:8px solid var(--leaf); }
+  .grade.jr h2.gh { border-color:#3f7fbf; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+  .empty { color:var(--sub); background:#fff; border:2px dashed #e6dcc6; border-radius:16px; padding:16px; text-align:center; }
+  .filters a { border:2px solid var(--leaf); background:#fff; color:var(--leaf); border-radius:999px; padding:6px 14px; font-weight:bold; text-decoration:none; }
+  .filters a.jr { border-color:#3f7fbf; color:#3f7fbf; }
   a.card { display:block; background:var(--card); border-radius:16px; padding:20px; text-decoration:none; color:inherit; box-shadow:0 3px 0 #e6dcc6; transition:transform .15s; }
   a.card:hover { transform:translateY(-3px); }
   .emoji { font-size:2.4rem; }
@@ -46,19 +53,19 @@ const items = [
   { path:"warizan/", emoji:"🍬", title:"わり算ってなに？", grade:"小3", subject:"算数",
     desc:"あめをお皿に分けて、わり算のしくみを目で見てたしかめよう。さいごにクイズも！" },
 ];
-const subjects = ["すべて", ...new Set(items.map(i => i.subject))];
-let current = "すべて";
-function render() {
-  document.getElementById("filters").innerHTML = subjects.map(s =>
-    `<button class="${s===current?'on':''}" onclick="current='${s}';render()">${s}</button>`).join("");
-  document.getElementById("list").innerHTML = items
-    .filter(i => current==="すべて" || i.subject===current)
-    .map(i => `<a class="card" href="${i.path}">
-      <div class="emoji">${i.emoji}</div>
-      <div class="tags"><span class="tag">${i.grade}</span><span class="tag subj">${i.subject}</span></div>
-      <h2>${i.title}</h2><p>${i.desc}</p></a>`).join("");
-}
-render();
+const grades = ["小1","小2","小3","小4","小5","小6","中1","中2","中3"];
+document.getElementById("filters").innerHTML = grades.map((g, i) =>
+  `<a href="#g${i}" class="${g.startsWith('中')?'jr':''}">${g}</a>`).join("");
+document.getElementById("list").innerHTML = grades.map((g, i) => {
+  const list = items.filter(it => it.grade === g);
+  const body = list.length
+    ? `<div class="grid">${list.map(it => `<a class="card" href="${it.path}">
+        <div class="emoji">${it.emoji}</div>
+        <div class="tags"><span class="tag subj">${it.subject}</span></div>
+        <h2>${it.title}</h2><p>${it.desc}</p></a>`).join("")}</div>`
+    : `<p class="empty">じゅんび中だよ。お楽しみに！</p>`;
+  return `<section class="grade ${g.startsWith('中')?'jr':''}" id="g${i}"><h2 class="gh">${g.replace('小','小学').replace('中','中学')}年生</h2>${body}</section>`;
+}).join("");
 </script>
 </body>
 </html>
